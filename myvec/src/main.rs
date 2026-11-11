@@ -40,6 +40,46 @@ impl<T> MyVec<T> {
             self.data.push(None);
         }
     }
+
+    /// 인덱스의 값을 빌려서 보여준다
+    fn get(&self, index: usize) -> Option<&T> {
+        // 범위 점검 (저장된 갯 수 이내), 범위 밖 None
+        if index < self.len {
+            self.data[index].as_ref()
+        } else {
+            None
+        }
+    }
+
+    /// 맨 뒤 값을 꺼내서 돌려준다. 비어 있으면 None
+    fn pop(&mut self) -> Option<T> {
+        if self.len == 0 {
+            None
+        } else {
+            self.len -= 1;
+            self.data[self.len].take() // self.len은 채울 칸의 번호
+        }
+    }
+}
+
+struct Stack<T> {
+    item: MyVec<T>,
+}
+
+impl<T> Stack<T> {
+    fn new() -> Self {
+        Self { item: MyVec::new() }
+    }
+
+    // 맨 위에 값을 넣는다
+    fn push(&mut self, value: T) {
+        self.item.push(value);
+    }
+
+    // 맨 위 갓을 꺼낸다 (비어 있으면 None)
+    fn pop(&mut self) -> Option<T> {
+        self.item.pop()
+    }
 }
 
 fn main() {
@@ -58,4 +98,26 @@ fn main() {
     println!("len = {}, cap = {}", v.len, v.capacity());
     v.push(90);
     println!("len = {}, cap = {}", v.len, v.capacity());
+
+    let mut v: MyVec<i32> = MyVec::new();
+    v.push(10);
+    v.push(20);
+    println!("{:?}", v.get(0));
+    println!("{:?}", v.get(1));
+    println!("{:?}", v.get(2));
+
+    let mut v: MyVec<i32> = MyVec::new();
+    v.push(10);
+    v.push(20);
+    println!("{:?}", v.pop());
+    println!("{:?}", v.pop());
+    println!("{:?}", v.pop());
+
+    let mut s: Stack<i32> = Stack::new();
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    println!("{:?}", s.pop());
+    println!("{:?}", s.pop());
+    println!("{:?}", s.pop());
 }
