@@ -82,6 +82,35 @@ impl<T> Stack<T> {
     }
 }
 
+struct Queue<T> {
+    item: MyVec<T>,
+}
+
+impl<T> Queue<T> {
+    fn new() -> Self {
+        Self { item: MyVec::new() }
+    }
+
+    /// 맨 뒤에 값을 넣는다.
+    fn push(&mut self, value: T) {
+        self.item.push(value);
+    }
+
+    /// 맨 앞 값을 꺼내고, 나머지를 한칸씩 앞으로 당긴다.
+    fn remove_front(&mut self) -> Option<T> {
+        if self.item.len == 0 {
+            None
+        } else {
+            let out = self.item.data[0].take();
+            for i in 1..self.item.len {
+                self.item.data.swap(i - 1, i);
+            }
+            self.item.len -= 1;
+            out
+        }
+    }
+}
+
 fn main() {
     let mut v: MyVec<i32> = MyVec::new();
     println!("len = {}, cap = {}", v.len, v.capacity());
@@ -120,4 +149,14 @@ fn main() {
     println!("{:?}", s.pop());
     println!("{:?}", s.pop());
     println!("{:?}", s.pop());
+
+    let mut q: Queue<i32> = Queue::new();
+    q.push(10);
+    q.push(20);
+    q.push(30);
+
+    println!("{:?}", q.remove_front());
+    println!("{:?}", q.remove_front());
+    println!("{:?}", q.remove_front());
+    println!("{:?}", q.remove_front());
 }
